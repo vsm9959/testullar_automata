@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<title>Bricklayer Grid</title>
+
+<!-- ---------------------------------------------------------------------------- -->
+<style type="text/css">
+
+body {
+    background-color: lightblue;
+}
+
+#vitruvia_canvas
+    {
+    display: block;
+    }
+    
+.canvas__mirror {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+.LEGO{
+    width: 30px;
+    height: 30px;
+    float:left;
+    border-color: red;
+}
+#empty_button{
+    background-color: white;
+}
+#canvas_area{
+}
+
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a, .dropbtn {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+}
+
+li.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover  {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+    .dropdown-content #selectFiles{
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+</style>
+
+<!-- ---------------------------------------------------------------------------- -->
+
+<script src="javascript/grid.js"></script>
+    
+</head>
+
+
+<body onload="initGame()" onresize="updateGrid(0);">
+
+
+<ul>
+    <li><a href=https://bricklayerdotorg.wordpress.com/>Home</a></li>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">File</a>
+        <div class="dropdown-content">
+            <a href="javascript:createPixelArtJSON();">Save Grid</a>
+            <a href="javascript:saveCanvas();">Save Image</a>
+            <a href="javascript:createBL();">Save as Bricklayer Program</a>
+            <a href="javascript:createBlLite();">Save as Bricklayer Lite Program</a>
+            <input type="file" id="selectFiles" value="Import" onchange="loadGridJSON();" /><br />
+        </div>
+    </li>
+</ul>
+
+
+
+<br>
+
+<input type="image" class = "LEGO" src="bricklayercolors/aqua_02.png"           onclick="pickLEGO(aqua);">
+<input type="image" class = "LEGO" src="bricklayercolors/armygreen_02.png"      onclick="pickLEGO(armygreen);">
+<input type="image" class = "LEGO" src="bricklayercolors/black_02.png"          onclick="pickLEGO(black);">
+<input type="image" class = "LEGO" src="bricklayercolors/blue_02.png"           onclick="pickLEGO(blue);">
+<input type="image" class = "LEGO" src="bricklayercolors/brightgreen_02.png"    onclick="pickLEGO(brightgreen);">
+<input type="image" class = "LEGO" src="bricklayercolors/brown_02.png"          onclick="pickLEGO(brown);">
+<input type="image" class = "LEGO" src="bricklayercolors/coolyellow_02.png"     onclick="pickLEGO(coolyellow);">
+<input type="image" class = "LEGO" src="bricklayercolors/darkbrown_02.png"      onclick="pickLEGO(darkbrown);">
+<input type="image" class = "LEGO" src="bricklayercolors/darkgreen_02.png"      onclick="pickLEGO(darkgreen);">
+<input type="image" class = "LEGO" src="bricklayercolors/darklavender_02.png"   onclick="pickLEGO(darklavender);">
+<input type="image" class = "LEGO" src="bricklayercolors/darkred_02.png"        onclick="pickLEGO(darkred);">
+<input type="image" class = "LEGO" src="bricklayercolors/gray_02.png"           onclick="pickLEGO(gray);">
+<input type="image" class = "LEGO" src="bricklayercolors/grayblue_02.png"       onclick="pickLEGO(grayblue);">
+<input type="image" class = "LEGO" src="bricklayercolors/green_02.png"          onclick="pickLEGO(green);">
+<input type="image" class = "LEGO" src="bricklayercolors/indigo_02.png"         onclick="pickLEGO(indigo);">
+<input type="image" class = "LEGO" src="bricklayercolors/lavender_02.png"       onclick="pickLEGO(lavender);">
+<input type="image" class = "LEGO" src="bricklayercolors/lightaqua_02.png"      onclick="pickLEGO(lightaqua);">
+<input type="image" class = "LEGO" src="bricklayercolors/lightblue_02.png"      onclick="pickLEGO(lightblue);">
+<input type="image" class = "LEGO" src="bricklayercolors/lightbrown_02.png"     onclick="pickLEGO(lightbrown);">
+<input type="image" class = "LEGO" src="bricklayercolors/lightgray_02.png"      onclick="pickLEGO(lightgray);">
+<br><br>
+<input type="image" class = "LEGO" src="bricklayercolors/lightgreen_02.png"     onclick="pickLEGO(lightgreen);">
+<input type="image" class = "LEGO" src="bricklayercolors/lightnougat_02.png"    onclick="pickLEGO(lightnougat);">
+<input type="image" class = "LEGO" src="bricklayercolors/lightpink_02.png"      onclick="pickLEGO(lightpink);">
+<input type="image" class = "LEGO" src="bricklayercolors/lightroyalblue_02.png" onclick="pickLEGO(lightroyalblue);">
+<input type="image" class = "LEGO" src="bricklayercolors/mediumnougat_02.png"   onclick="pickLEGO(mediumnougat);">
+<input type="image" class = "LEGO" src="bricklayercolors/nougat_02.png"         onclick="pickLEGO(nougat);">
+<input type="image" class = "LEGO" src="bricklayercolors/olive_02.png"          onclick="pickLEGO(olive);">
+<input type="image" class = "LEGO" src="bricklayercolors/orange_02.png"         onclick="pickLEGO(orange);">
+<input type="image" class = "LEGO" src="bricklayercolors/pink_02.png"           onclick="pickLEGO(pink);">
+<input type="image" class = "LEGO" src="bricklayercolors/red_02.png"            onclick="pickLEGO(red);">
+<input type="image" class = "LEGO" src="bricklayercolors/reddishviolet_02.png"  onclick="pickLEGO(reddishviolet);">
+<input type="image" class = "LEGO" src="bricklayercolors/silver_02.png"         onclick="pickLEGO(silver);">
+<input type="image" class = "LEGO" src="bricklayercolors/spring_02.png"         onclick="pickLEGO(spring);">
+<input type="image" class = "LEGO" src="bricklayercolors/stonegray_02.png"      onclick="pickLEGO(stonegray);">
+<input type="image" class = "LEGO" src="bricklayercolors/titanium_02.png"       onclick="pickLEGO(titanium);">
+<input type="image" class = "LEGO" src="bricklayercolors/violet_02.png"         onclick="pickLEGO(violet);">
+<input type="image" class = "LEGO" src="bricklayercolors/warmgold_02.png"       onclick="pickLEGO(warmgold);">
+<input type="image" class = "LEGO" src="bricklayercolors/white_02.png"          onclick="pickLEGO(white);">
+<input type="image" class = "LEGO" src="bricklayercolors/whiteglow_02.png"      onclick="pickLEGO(whiteglow);">
+<input type="image" class = "LEGO" src="bricklayercolors/yellow_02.png"         onclick="pickLEGO(yellow);">
+<br><br>
+<button id = "empty_button" onclick="pickLEGO(empty)">Empty</button>
+<br><br>
+
+<input type="button" value="+"           onclick="incrementGrid();">
+<var id="size">8</var>
+<input type="button" value="-"           onclick="decrementGrid();">
+<input type="button" value="Clear"       onclick="clearGrid();"/>
+<input type="button" value="Hide Lines"  onclick="hideGridLines(empty);"/>
+<input type="button" value="Show Lines"  onclick="hideGridLines(lineColor);"/>
+<input type="button" value="Undo"        onclick="undo();"/>
+<input type="button" value="Redo"        onclick="redo();"/>
+<span id ="output_type"> Output Format:</span>
+<select id ="output_format" onchange="changeOutputFormat();">
+    <option value="PLAIN">PLAIN</option>
+    <option value="LEGO">LEGO</option>
+</select>
+
+<div id = "canvas_area">
+    <canvas id="vitruvia_canvas">  
+    <img src="" id="mirror" class="canvas__mirror" /> 
+    </canvas>
+    </div>
+
+</body>
+</html>
