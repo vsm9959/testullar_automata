@@ -3,7 +3,8 @@ var kBoardWidth;
 var kBoardHeight;
 
 var kStep;
-var side = 8;
+var side  =  3;
+var side2 =  8;
 
 var kPixelWidth;
 var kPixelHeight;
@@ -682,12 +683,12 @@ function incrementGrid() {
     if (side < 2) {
         alert('Smallest size is 2');
         side = 2;
-    }else if (side > 64) {
-        alert('Largest size is 64');
-        side = 64;
+    }else if (side > 5) {
+        alert('Largest size is 5');
+        side = 5;
     }else {
         document.getElementById("size").innerHTML = side;
-        updateGrid(1);
+        updateGrid(1,0);
     }
 }
 // =======================================================================================
@@ -696,45 +697,83 @@ function decrementGrid() {
     if (side < 2) {
         alert('Smallest size is 2');
         side = 2;
-    }else if (side >64) {
-        alert('Largest size is 64');
-        side = 64;
+    }else if (side >5) {
+        alert('Largest size is 5');
+        side = 5;
     }else {
         document.getElementById("size").innerHTML = side;
-        updateGrid(-1);
+        updateGrid(-1,0);
     }
 }
 // =======================================================================================
+function incrementGrid2() {
+    side2++;
+
+    if (side2 < 8) {
+        alert('Smallest size is 8');
+        side2 = 8;
+    }else if (side > 64) {
+        alert('Largest size is 64');
+        side2 = 64;
+    }else {
+        document.getElementById("size2").innerHTML = side2;
+        updateGrid(0,1);
+    }
+}
+// =======================================================================================
+function decrementGrid2() {
+    side2--;
+    if (side2 < 2) {
+        alert('Smallest size is 8');
+        side2 = 8;
+    }else if (side >64) {
+        alert('Largest size is 64');
+        side2 = 64;
+    }else {
+        document.getElementById("size2").innerHTML = side2;
+        updateGrid(0,-1);
+    }
+}
+// ===========================================================================================
 function pickLEGO(lego) {
     currentColor = lego;
     document.getElementById("vitruvia_canvas").style.cursor = 'url('+currentColor.src+'), auto';
 }
 // =======================================================================================
-function updateGrid(d){
+function updateGrid(d,d2){
+    //cell
     var v              = side;
     var temp = new Image();
-    //var d=1;
+    // canvas
+    var v2              = side2;
 
-        //d = v - side;
-
-    // squares per side
-    if (v < 1) {
+    //cell
+    if (v < 2) {
         alert('Smallest size is 2');
         side = 2;
     }
 
-    if (64 < v) {
-        alert('Largest size is 64');
-        side = 64;
+    if (5 < v) {
+        alert('Largest size is 5');
+        side = 5;
     }
     else { side = v; }
 
+    //canvas
+    if (v2 < 8) {
+        alert('Smallest size is 8');
+        side2 = 8;
+    }
 
+    if (64 < v2) {
+        alert('Largest size is 64');
+        side2 = 64;
+    }
+    else { side2 = v2; }
 
-
-    //var boardSize  = 500;
+    //cell
     var boardSize;
-    var delta = 0.3;
+    var delta = 0.8;
 
     if (window.innerWidth < window.innerHeight)
     {
@@ -762,7 +801,7 @@ function updateGrid(d){
     }
 
 
-    //size of canvas we want to use
+    //size of cell we want to use
     kPixelWidth  = kStep * side + 1;
     kPixelHeight = kStep * side + 1;
 
@@ -772,18 +811,62 @@ function updateGrid(d){
     gCanvasElement.width  = kPixelWidth ;  // + 2*kStep // the kSteps make room for the pallet
     gCanvasElement.height = kPixelHeight;
 
+    //canvas
+    var boardSize2;
+    var delta2 = 0.3;
+
+    if (window.innerWidth < window.innerHeight)
+    {
+        boardSize2 = window.innerWidth - delta2 * window.innerWidth ;
+    }
+    else
+    {
+        boardSize2 = window.innerHeight - delta2 * window.innerHeight;
+    }
+
+
+    kStep2 = Math.floor(boardSize2 / side2);
+
+
+    //size of canvas we want to use
+    kPixelWidth2  = kStep2 * side2 + 1;
+    kPixelHeight2 = kStep2 * side2 + 1;
+
+    kBoardWidth2  = kPixelWidth2;
+    kBoardHeight2 = kPixelHeight2;
+
+    gCanvasElement2.width  = kPixelWidth2 ;  // + 2*kStep // the kSteps make room for the pallet
+    gCanvasElement2.height = kPixelHeight2;
+
+
     drawBoard();
 
     if(gridLogs.length!=0){
-        drawBoard();
         for(i=0;i<gridLogs.length;i++){
             temp.src= gridLogs[i].color;
             if (gridLogs[i].color == empty){
+                for (j = Math.floor(gridLogs[i].row/kStep)*kStep2; j<=xEnd2; j+= (side*kStep2)){
+                    for(k = Math.floor((gridLogs[i].column/kStep))*kStep2; k<=yEnd2; k+= (side*kStep2)){
+                        gDrawingContext2.fillStyle = empty;
+                        gDrawingContext2.fillRect(j+1, k+1, kStep2 - 1, kStep2 - 1);
+                    }
+                }
                 gDrawingContext.fillStyle = empty;
                 gDrawingContext.fillRect(gridLogs[i].row, gridLogs[i].column, kStep - 1, kStep - 1);
             } else if (outputFormat == "LEGO"){
+                for (j = Math.floor(gridLogs[i].row/kStep)*kStep2; j<=xEnd2; j+= (side*kStep2)){
+                    for(k = Math.floor((gridLogs[i].column/kStep))*kStep2; k<=yEnd2; k+= (side*kStep2)){
+                        gDrawingContext2.drawImage(temp, j+1, k+1, kStep2 - 1, kStep2 - 1);
+                    }
+                }
                 gDrawingContext.drawImage(temp, gridLogs[i].row, gridLogs[i].column, kStep - 1, kStep - 1);
             } else {
+                for (j = Math.floor(gridLogs[i].row/kStep)*kStep2; j<=xEnd2; j+= (side*kStep2)){
+                    for(k = Math.floor((gridLogs[i].column/kStep))*kStep2; k<=yEnd2; k+= (side*kStep2)){
+                        gDrawingContext2.fillStyle = pickBlColorHex(temp.src);
+                        gDrawingContext2.fillRect(j+1, k+1, kStep2 - 1, kStep2 - 1);
+                    }
+                }
                 gDrawingContext.fillStyle = pickBlColorHex(temp.src);
                 gDrawingContext.fillRect( gridLogs[i].row, gridLogs[i].column, kStep - 1, kStep - 1);
             }
@@ -870,30 +953,55 @@ function vitruviaOnClick(e) {
 
     bleep.play();
 
-       if ((column < xEnd - 1) && (row < yEnd - 1) ) {
-           var x = Math.floor(column/kStep) * kStep;
-           var y = Math.floor(row/kStep) * kStep;
+        //cell
+    if ((column < xEnd - 1) && (row < yEnd - 1) ) {
+        var x = Math.floor(column/kStep) * kStep;
+        var y = Math.floor(row/kStep) * kStep;
+        var x2 = Math.floor(x/kStep);
+        var y2 = Math.floor(y/kStep);
+        x2= x2*kStep2;
+        y2= y2*kStep2;
 
-           if(currentColor == empty){
-               gDrawingContext.fillStyle = currentColor;
-               gDrawingContext.fillRect(x+1, y+1, kStep-1, kStep-1);
-           } else if(outputFormat == "LEGO") {
+        if(currentColor == empty){
+            gDrawingContext.fillStyle = currentColor;
+            gDrawingContext.fillRect(x+1, y+1, kStep-1, kStep-1);
+        } else if(outputFormat == "LEGO") {
                gDrawingContext.drawImage(currentColor, x + 1, y + 1, kStep - 1, kStep - 1); // box lines don't get redrawn with empty color
-           } else {
+        } else {
                gDrawingContext.fillStyle = pickBlColorHex(currentColor.src);
                gDrawingContext.fillRect(x+1,y+1,kStep-1,kStep -1);
-           }
-
-           if(currentColor == empty){
-               gridLogs.push(new GridLog(x+1,y+1,currentColor));
-           } else {
-               gridLogs.push(new GridLog(x + 1, y + 1, currentColor.src));
-           }
         }
+
+        if(currentColor == empty){
+               gridLogs.push(new GridLog(x+1,y+1,currentColor));
+        } else {
+               gridLogs.push(new GridLog(x + 1, y + 1, currentColor.src));
+        }
+    }
+    // canvas
+    if ((column < xEnd2 - 1) && (row < yEnd2 - 1) ) {
+        for (var i = x2; i<=xEnd2; i+= (side*kStep2)){
+            for(var j = y2; j<=yEnd2; j+= (side*kStep2)){
+                if(currentColor == empty){
+                    gDrawingContext2.fillStyle = currentColor;
+                    gDrawingContext2.fillRect(i+1, j+1, kStep2-1, kStep2-1);
+                } else if(outputFormat == "LEGO") {
+                    gDrawingContext2.drawImage(currentColor, i + 1, j + 1, kStep2 - 1, kStep2 - 1); // box lines don't get redrawn with empty color
+                } else {
+                    gDrawingContext2.fillStyle = pickBlColorHex(currentColor.src);
+                    gDrawingContext2.fillRect(i+1,j+1,kStep2-1,kStep2 -1);
+                }
+
+
+            }
+        }
+    }
+
 }
 
 // =======================================================================================
 function drawLines(color) {
+    //cell
     xEnd = kPixelWidth;
     yEnd = kPixelHeight;
     
@@ -917,12 +1025,39 @@ function drawLines(color) {
     gDrawingContext.strokeStyle = color;
     gDrawingContext.stroke();        
     
-    gDrawingContext.closePath();    
+    gDrawingContext.closePath();
+
+    //canvas
+    xEnd2 = kPixelWidth2;
+    yEnd2 = kPixelHeight2;
+
+    //gDrawingContext.clearRect(0, 0, xEnd, yEnd);
+
+    gDrawingContext2.beginPath();
+
+    /* vertical lines */
+    for (var x = 0; x <= xEnd2; x += kStep2) {
+        gDrawingContext2.moveTo(0.5 + x, 0);
+        gDrawingContext2.lineTo(0.5 + x, yEnd2);
+    }
+
+    /* horizontal lines */
+    for (var y = 0; y <= yEnd2; y += kStep2) {
+        gDrawingContext2.moveTo(0    , 0.5 + y);
+        gDrawingContext2.lineTo(xEnd2, 0.5 +  y);
+    }
+
+    /* draw it! */
+    gDrawingContext2.strokeStyle = color;
+    gDrawingContext2.stroke();
+
+    gDrawingContext2.closePath();
 }
 
 // =======================================================================================
 function drawBoard() {
 
+    //cell
     xEnd = kPixelWidth;
     yEnd = kPixelHeight;
     
@@ -938,12 +1073,29 @@ function drawBoard() {
     drawLines(lineColor);
 
     gDrawingContext.closePath();
+
+    //canvas
+    xEnd2= kPixelWidth2;
+    yEnd2 = kPixelHeight2;
+
+    gDrawingContext2.clearRect(0, 0, xEnd2, yEnd2);
+
+    gDrawingContext2.beginPath();
+
+    // Canvas base color
+    gDrawingContext2.fillStyle = empty;
+    gDrawingContext2.rect(0, 0, xEnd2, yEnd2);
+    gDrawingContext2.fill();
+
+    drawLines(lineColor);
+
+    gDrawingContext2.closePath();
 }
 
 // =======================================================================================
 function saveCanvas() {
 
-    var canvas = document.getElementById('vitruvia_canvas');
+    var canvas = document.getElementById('vitruvia_canvas2');
     var a = document.createElement('a');
     // toDataURL defaults to png, so we need to request a jpeg, then convert for file download.
     a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
@@ -968,56 +1120,103 @@ function hideGridLines(color) {
 
 // =======================================================================================
 function initGame() {
-    var canvasElement  = document.getElementById("vitruvia_canvas"); 
+    //cell
+    var canvasElement  = document.getElementById("vitruvia_canvas");
     var v              = side;
-    
-    // squares per side
-    if (v < 1) { 
+
+
+    //canvas
+    var canvasElement2 = document.getElementById("vitruvia_canvas2");
+    var v2             = side2;
+
+    //cell
+    if (v < 2) {
         alert('Smallest size is 2');
         side = 2;
     }
-    
-    if (64 < v) { 
+
+    if (5 < v) {
         alert('Largest size is 64');
-        side = 64;
+        side = 5;
     }
     else { side = v; }
 
-    
-    
-   
-    //var boardSize  = 500;
     var boardSize;
-    var delta = 0.3;
-    
+    var delta = 0.8;
+
     if (window.innerWidth < window.innerHeight)
-    { 
+    {
         boardSize = window.innerWidth - delta * window.innerWidth ;
     }
     else
-    { 
+    {
         boardSize = window.innerHeight - delta * window.innerHeight;
     }
 
-  
+
     kStep = Math.floor(boardSize / side);
-               
-    
+
+
     //size of canvas we want to use
     kPixelWidth  = kStep * side + 1;
     kPixelHeight = kStep * side + 1;
-    
+
     kBoardWidth  = kPixelWidth;
     kBoardHeight = kPixelHeight;
+
+
+    //for cell
+    // squares per side
+
+
+
+    //for canvas
+    if (v2 < 8) {
+        alert('Smallest size is 2');
+        side2 = 8;
+    }
+
+    if (64 < v2) {
+        alert('Largest size is 64');
+        side = 64;
+    }
+    else { side2 = v2; }
+    var boardSize2;
+    var delta2 = 0.3;
+
+    if (window.innerWidth < window.innerHeight)
+    {
+        boardSize2 = window.innerWidth - delta2 * window.innerWidth ;
+    }
+    else
+    {
+        boardSize2 = window.innerHeight - delta2 * window.innerHeight;
+    }
+
+
+    kStep2 = Math.floor(boardSize2 / side2);
+
+
+    //size of canvas we want to use
+    kPixelWidth2  = kStep2 * side2 + 1;
+    kPixelHeight2 = kStep2 * side2 + 1;
+
+    kBoardWidth2  = kPixelWidth2;
+    kBoardHeight2 = kPixelHeight2;
+
     
- 
+    // cell
     gCanvasElement        = canvasElement;
     gCanvasElement.width  = kPixelWidth ;  // + 2*kStep // the kSteps make room for the pallet
     gCanvasElement.height = kPixelHeight ;// + 2*kStep
     gCanvasElement.addEventListener("click", vitruviaOnClick, false);
     gDrawingContext       = gCanvasElement.getContext("2d");
 
-//    drawPallet();
+    //canvas
+    gCanvasElement2        = canvasElement2;
+    gCanvasElement2.width  = kPixelWidth2 ;  // + 2*kStep // the kSteps make room for the pallet
+    gCanvasElement2.height = kPixelHeight2 ;// + 2*kStep
+    gDrawingContext2       = gCanvasElement2.getContext("2d");
     drawBoard();
 
 }
